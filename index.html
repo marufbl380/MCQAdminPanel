@@ -1,0 +1,77 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCQAdminPanel v2.0</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="app-header">
+      <h1>MCQAdminPanel <span>v2.0</span></h1>
+      <button type="button" class="hamburger-btn" id="openControlsBtn" aria-label="Open system controls">
+        Controls
+      </button>
+    </header>
+
+    <div class="app-layout">
+      <aside class="panel panel-editor" id="editorPanel" aria-label="Question editor" aria-hidden="true">
+        <div class="panel-head">
+          <h2>Question Editor</h2>
+          <button type="button" class="icon-btn" id="closeEditorBtn" aria-label="Close editor">x</button>
+        </div>
+
+        <form id="editorForm" class="editor-form" novalidate>
+          <div class="field-group">
+            <label for="questionInput">Question</label>
+            <textarea id="questionInput" rows="4" placeholder="Enter the question text"></textarea>
+          </div>
+          <div class="field-group">
+            <label>Options</label>
+            <div class="option-list" id="optionList"></div>
+          </div>
+
+          <div class="editor-actions">
+            <button type="button" class="secondary-btn" id="addOptionBtn">Add Option</button>
+            <button type="submit" class="primary-btn" id="saveQuestionBtn">Save Question</button>
+            <button type="button" class="ghost-btn" id="cancelEditBtn">Cancel</button>
+          </div>
+        </form>
+      </aside>
+
+      <main class="main-panel" aria-label="Question cards">
+        <div class="cards-toolbar">
+          <h2>Question Cards</h2>
+          <p id="questionCountLabel">0 questions</p>
+        </div>
+        <section class="cards-container" id="cardsContainer" aria-live="polite"></section>
+      </main>
+
+      <aside class="panel panel-controls" id="controlsPanel" aria-label="System controls">
+        <div class="panel-head">
+          <h2>System Controls</h2>
+          <button type="button" class="icon-btn mobile-only" id="closeControlsBtn" aria-label="Close controls">x</button>
+        </div>
+
+        <div class="controls-list">
+          <button type="button" class="primary-btn" id="addQuestionBtn">Add Question</button>
+          <button type="button" class="danger-btn" id="deleteQuestionBtn">Delete Question</button>
+          <button type="button" class="danger-btn" id="deleteSelectedBtn">Delete Selected Questions</button>
+          <button type="button" class="secondary-btn" id="importJsonBtn">Import JSON File</button>
+          <button type="button" class="secondary-btn" id="exportSelectedBtn">Export Selected To JSON</button>
+          <button type="button" class="secondary-btn" id="exportJsonBtn">Export JSON File</button>
+          <button type="button" class="primary-btn" id="createExamBtn">Create Exam File</button>
+          <input type="file" id="importJsonInput" accept=".json,application/json" hidden>
+        </div>
+
+        <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+      </aside>
+    </div>
+
+    <div class="panel-backdrop" id="panelBackdrop" aria-hidden="true"></div>
+  </div>
+</body>
+</html>
+
