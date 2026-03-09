@@ -1,133 +1,251 @@
-# MCQAdminPanel v2.0
+# MCQAdminPanel v2.1
 
-Production-style MCQ admin panel and standalone exam generator built with:
+Professional client-side MCQ authoring and exam delivery system built with:
 
 - HTML5
 - CSS3
 - Vanilla JavaScript
-- No framework
-- No backend
-- JSON import/export persistence
+- JSON-based data portability
+- No backend, no framework, no jQuery
 
-## Project Status
+---
 
-This repository's modern source of truth is:
+## Overview
+
+MCQAdminPanel v2.1 is a complete CBT-style workflow in two parts:
+
+1. **Admin Panel** (`index.html`)
+2. **Generated Standalone Exam File** (`exam.html`, created from admin)
+
+The admin panel is used to create, edit, organize, validate, and export questions.  
+The generated exam file runs independently with setup, timed attempt, and result review.
+
+---
+
+## Canonical Project Files
+
+Primary source files:
 
 - `index.html`
 - `style.css`
 - `script.js`
 
-If a merged single-file artifact exists (for example `MCQAdminPanel.html`), treat the three source files above as canonical for development and release validation.
+Portable single-file artifact:
 
-## Core Features
+- `MCQAdminPanel.base64.html`
 
-- Three-container admin architecture
-- Main container with draggable question cards
-- Left sliding question editor with full option/correct-answer logic
-- Right control panel for system actions only
-- JSON import that appends only (never replaces existing state)
-- Export full JSON and selected-only JSON
-- Standalone `exam.html` generation with embedded data
-- Timed exam flow with setup, test, and results screens
+For development and maintenance, use the 3-file source set as canonical.
 
-## Admin Panel Behavior
+---
+
+## Admin Panel (index.html)
+
+### 3-Container Architecture
+
+1. **Main Container (Question Cards)**
+2. **Left Sliding Panel (Question Editor)**
+3. **Right Control Panel (System Controls)**
 
 ### Main Container
 
-- Shows question cards only
-- Question preview, option count, checkbox, and Edit action
-- Card selection highlight
-- Drag and drop reorder with state update
+- Displays question cards only
+- Card content includes:
+  - Question preview
+  - Option count
+  - Selection checkbox
+  - Edit action
+- Supports:
+  - Multi-select
+  - Drag-and-drop reorder
+  - Visual selected/duplicate states
 
-### Left Editor Panel
+### Left Panel: Question Editor
 
-- Hidden by default, slides in for editing
-- Question textarea
-- Dynamic options (min 2, max 6)
-- Exactly one correct answer required
-- Save and Cancel flow with unsaved-change guard
-- Option textareas support multiline input
-- Arrow key navigation between question and option textareas
+- Opens for create/edit operations
+- Contains:
+  - Question field
+  - Option list (min 2, max 6)
+  - Correct answer selector (exactly 1)
+  - Sticky option toolbar (`Add Option`, `Move Up`, `Move Down`)
+  - Save / Cancel actions
+- Includes unsaved-change protection
+- Supports multiline option editing
+- Supports keyboard navigation and editing shortcuts
 
-### Right Control Panel
+### Math Authoring System
 
-- Add question
-- Delete current question
-- Delete selected questions
-- Import JSON (append-only)
-- Export selected JSON
-- Export full JSON
-- Create exam file
+- Structures + Symbols navigation inside editor
+- Math search input
+- Insert templates/snippets into question or option cursor position
+- Math preview with MathJax rendering
+- Works in generated exam file as well
+
+### Right Panel: System Controls
+
+Core actions:
+
+- Add Question
+- Delete Question
+- Delete Selected Questions
+- Import JSON File (append-only)
+- Export Selected to JSON
+- Export JSON File
+- Create Exam File
+
+Extended utilities:
+
+- Clone Selected
+- Shuffle Selected
+- Assign Tag to Selected
+- Export Answer Key JSON
+- Print Questions
+- Print Answer Key
+- Open Test Harness
+
+### Additional Admin Features
+
+- Theme toggle (Light/Dark)
+- High-contrast mode
+- Keyboard shortcuts modal
+- Status log panel
+- Question search and filtering:
+  - Text query
+  - Topic
+  - Difficulty
+  - Duplicates only
+- Stats cards
+- Undo/Redo history
+- Auto-persisted local state
+
+---
 
 ## Data Model
 
-Each question uses this structure:
+Question object:
 
 ```json
 {
-  "id": "q_unique_id",
+  "id": "unique-id",
   "question": "Question text",
   "options": ["Option A", "Option B", "Option C", "Option D"],
-  "correctIndex": 0
+  "correctIndex": 0,
+  "topic": "Algebra",
+  "difficulty": "medium",
+  "marks": 1,
+  "tags": ["chapter-1", "mcq"],
+  "explanation": "Optional explanation"
 }
 ```
 
-## JSON Rules
+---
 
-- Import accepts array payload or `{ "questions": [...] }`
-- Imported questions are normalized and assigned new IDs
-- Invalid entries are skipped
-- Existing questions are preserved
+## Import / Export Rules
 
-## Generated Exam (`exam.html`)
+### Import JSON
 
-The generated file is fully standalone and does not depend on admin files.
+- Accepts:
+  - Array format
+  - `{ "questions": [...] }` format
+- **Append-only behavior** (never wipes existing data)
+- Imported records are normalized
+- New unique IDs are generated for imported entries
+- Invalid rows are rejected and reported
 
-### Setup Screen
+### Export JSON
 
-- Exam title
-- Total available questions
-- Question count input
-- Shuffle questions toggle
-- Shuffle options toggle
-- Time limit input (minutes)
-- Start button with validation
+- Full export: current question order preserved
+- Selected export: only selected question cards, order preserved
+- Answer-key export also available
 
-### Exam Screen
+---
 
-- Selected question subset based on setup
-- Optional question and option shuffling
-- Sticky timer
-- One-answer-per-question radio inputs
-- Manual submit confirmation
-- Auto submit on timeout
+## Exam Generation and Runtime
 
-### Result Screen
+Click `Create Exam File` in admin to generate a standalone `exam.html`.
 
-- Score and percentage
-- Time taken
-- Result mode (manual or auto submit)
-- Review with correct/incorrect highlighting
-- Toggle to show or hide detailed answer review
+Generated exam includes embedded question payload:
 
-## Responsive Design
+- No dependency on admin page
+- No dependency on localStorage from admin
 
-- Desktop: centered layout, sliding editor, fixed control panel
-- Tablet: overlay control behavior
-- Mobile: full-screen editor panel and slide-in controls with hamburger trigger
+### Exam Screen Flow
+
+1. **Setup Screen**
+   - Exam title
+   - Total available questions
+   - Requested question count
+   - Shuffle questions toggle
+   - Shuffle options toggle
+   - Time limit (minutes)
+   - Validation before start
+
+2. **Exam Screen**
+   - Selected questions rendered responsively
+   - Visible timer
+   - One-answer-per-question radio selection
+   - Manual submit confirmation
+   - Auto-submit when timer reaches zero
+
+3. **Result Screen**
+   - Score
+   - Percentage
+   - Time taken
+   - Correct/incorrect highlighting
+   - Toggleable answer review
+
+### Exam Config / Security Options
+
+From admin controls:
+
+- Presets (`quick`, `school`, `mock`)
+- Fullscreen on start (optional)
+- Navigation warning tracking (optional)
+- Attempt token generation (optional)
+- Preflight validation before file generation
+
+---
+
+## Responsive Behavior
+
+- **Desktop**: full 3-section workflow, sliding editor, persistent controls panel
+- **Tablet**: panel overlay behavior
+- **Mobile**:
+  - Full-screen left editor
+  - Controls panel opened via controls button
+  - Controls panel fixed near bottom-right flow
+
+---
+
+## Keyboard Shortcuts (Default)
+
+- `Ctrl + N` -> Add Question
+- `Ctrl + S` -> Save Question
+- `Ctrl + Z` -> Undo
+- `Ctrl + Y` -> Redo
+- `Ctrl + .` -> Toggle controls panel (compact layouts)
+- `Shift + ?` -> Open shortcuts modal
+- `Ctrl + K` -> Focus math search (editor open)
+
+---
 
 ## Run Locally
 
-No install step is required.
+No installation is required.
 
 1. Open `index.html` in a browser.
-2. Build questions and click `Create Exam File`.
-3. Open the downloaded `exam.html` to run the standalone exam.
+2. Build/import question bank.
+3. Click `Create Exam File`.
+4. Open downloaded `exam.html` and run the test flow.
 
-## Release Checklist
+---
 
-- Validate behavior from `index.html` + `style.css` + `script.js`
-- Verify JSON import is append-only
-- Verify drag reorder updates question order correctly
-- Generate and test a fresh `exam.html`
+## Recommended QA Checklist
 
+Before release/distribution:
+
+1. Validate question save rules (2-6 options, one correct answer).
+2. Validate import is append-only.
+3. Validate drag reorder updates actual exported order.
+4. Validate math renders in admin preview and generated exam.
+5. Validate exam setup, timer, submit, and results flow.
+6. Validate mobile controls and panel behavior.
