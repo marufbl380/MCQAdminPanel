@@ -1,0 +1,241 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCQAdminPanel v2.0</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="app-header">
+      <h1>MCQAdminPanel <span>v2.0</span></h1>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Switch color theme">
+          Dark Theme
+        </button>
+        <button type="button" class="theme-toggle-btn" id="contrastToggleBtn" aria-label="Toggle high contrast mode">
+          High Contrast
+        </button>
+        <button type="button" class="theme-toggle-btn" id="shortcutsBtn" aria-label="Open keyboard shortcuts">
+          Shortcuts
+        </button>
+        <button type="button" class="hamburger-btn" id="openControlsBtn" aria-label="Open system controls">
+          Controls
+        </button>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="panel panel-editor" id="editorPanel" aria-label="Question editor" aria-hidden="true">
+        <div class="panel-head">
+          <h2>Question Editor</h2>
+          <button type="button" class="icon-btn" id="closeEditorBtn" aria-label="Close editor">x</button>
+        </div>
+
+        <section class="math-nav-section" id="mathNavSection" aria-label="Math navigation">
+          <div class="math-search-wrap">
+            <input
+              type="text"
+              class="math-search-input"
+              id="mathSearchInput"
+              placeholder="Search structures and symbols (Ctrl/Cmd+K)"
+              aria-label="Search math structures and symbols"
+            >
+          </div>
+          <div class="math-tab-row" role="tablist" aria-label="Math navigation tabs">
+            <button
+              type="button"
+              class="math-tab-btn active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="mathStructuresPanel"
+              id="mathStructuresTab"
+              data-math-tab="structures"
+            >
+              Structures
+            </button>
+            <button
+              type="button"
+              class="math-tab-btn"
+              role="tab"
+              aria-selected="false"
+              aria-controls="mathSymbolsPanel"
+              id="mathSymbolsTab"
+              data-math-tab="symbols"
+            >
+              Symbols
+            </button>
+          </div>
+          <div class="math-tab-content">
+            <div class="math-tab-panel active" id="mathStructuresPanel" role="tabpanel" data-math-panel="structures"></div>
+            <div class="math-tab-panel" id="mathSymbolsPanel" role="tabpanel" data-math-panel="symbols" hidden></div>
+          </div>
+        </section>
+
+        <form id="editorForm" class="editor-form" novalidate>
+          <div class="editor-scroll">
+            <div class="field-group">
+              <label for="questionInput">Question</label>
+              <textarea id="questionInput" rows="4" placeholder="Enter the question text"></textarea>
+              <div class="math-preview-wrap">
+                <p class="math-preview-title">Rendered Preview</p>
+                <div class="math-preview" id="questionMathPreview"></div>
+                <p class="math-hint" id="questionMathHint" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="field-group field-grid">
+              <div>
+                <label for="topicInput">Topic</label>
+                <input type="text" id="topicInput" placeholder="e.g. Algebra">
+              </div>
+              <div>
+                <label for="difficultySelect">Difficulty</label>
+                <select id="difficultySelect">
+                  <option value="easy">Easy</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              <div>
+                <label for="marksInput">Marks</label>
+                <input type="number" id="marksInput" min="1" step="1" value="1">
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="tagsInput">Tags (comma separated)</label>
+              <input type="text" id="tagsInput" placeholder="e.g. linear equations, board">
+            </div>
+            <div class="field-group">
+              <label for="explanationInput">Answer Explanation (optional)</label>
+              <textarea id="explanationInput" rows="3" placeholder="Shown on exam result review"></textarea>
+            </div>
+            <div class="field-group">
+              <label>Options</label>
+              <div class="option-toolbar" id="optionToolbar">
+                <button type="button" class="secondary-btn option-dock-btn" id="optionAddDockBtn">Add Option</button>
+                <button type="button" class="ghost-btn option-dock-btn" id="optionMoveUpBtn">Move Up</button>
+                <button type="button" class="ghost-btn option-dock-btn" id="optionMoveDownBtn">Move Down</button>
+                <p class="option-toolbar-hint" id="optionToolbarHint">Focus an option to move it.</p>
+              </div>
+              <div class="option-list" id="optionList"></div>
+            </div>
+          </div>
+
+          <div class="editor-actions">
+            <button type="button" class="secondary-btn" id="addOptionBtn">Add Option</button>
+            <button type="submit" class="primary-btn" id="saveQuestionBtn">Save Question</button>
+            <button type="button" class="ghost-btn" id="cancelEditBtn">Cancel</button>
+          </div>
+        </form>
+      </aside>
+
+      <main class="main-panel" aria-label="Question cards">
+        <div class="cards-toolbar">
+          <h2>Question Cards</h2>
+          <div class="cards-toolbar-meta">
+            <p id="questionCountLabel">0 questions</p>
+            <p id="selectedCountLabel">0 selected</p>
+          </div>
+        </div>
+        <div class="cards-filters">
+          <input type="search" id="questionSearchInput" placeholder="Search question text, topic, tags">
+          <select id="topicFilterSelect" aria-label="Filter by topic">
+            <option value="">All Topics</option>
+          </select>
+          <select id="difficultyFilterSelect" aria-label="Filter by difficulty">
+            <option value="">All Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <label class="inline-check">
+            <input type="checkbox" id="showDuplicatesToggle">
+            Duplicates
+          </label>
+        </div>
+        <section class="stats-grid" id="statsGrid" aria-live="polite"></section>
+        <section class="cards-container" id="cardsContainer" aria-live="polite"></section>
+      </main>
+
+      <aside class="panel panel-controls" id="controlsPanel" aria-label="System controls">
+        <div class="panel-head">
+          <h2>System Controls</h2>
+          <button type="button" class="icon-btn mobile-only" id="closeControlsBtn" aria-label="Close controls">x</button>
+        </div>
+
+        <div class="controls-list">
+          <button type="button" class="secondary-btn" id="undoBtn">Undo</button>
+          <button type="button" class="secondary-btn" id="redoBtn">Redo</button>
+          <button type="button" class="primary-btn" id="addQuestionBtn">Add Question</button>
+          <button type="button" class="danger-btn" id="deleteQuestionBtn">Delete Question</button>
+          <button type="button" class="danger-btn" id="deleteSelectedBtn">Delete Selected Questions</button>
+          <button type="button" class="secondary-btn" id="assignTagBtn">Assign Tag To Selected</button>
+          <button type="button" class="secondary-btn" id="cloneSelectedBtn">Clone Selected Questions</button>
+          <button type="button" class="secondary-btn" id="shuffleSelectedBtn">Shuffle Selected Questions</button>
+          <button type="button" class="secondary-btn" id="importJsonBtn">Import JSON File</button>
+          <button type="button" class="secondary-btn" id="exportSelectedBtn">Export Selected To JSON</button>
+          <button type="button" class="secondary-btn" id="exportJsonBtn">Export JSON File</button>
+          <button type="button" class="secondary-btn" id="exportAnswerKeyBtn">Export Answer Key JSON</button>
+          <button type="button" class="secondary-btn" id="printQuestionsBtn">Print Questions</button>
+          <button type="button" class="secondary-btn" id="printAnswerKeyBtn">Print Answer Key</button>
+          <button type="button" class="secondary-btn" id="openTestHarnessBtn">Open Test Harness</button>
+          <div class="control-config">
+            <label for="examPresetSelect">Exam Preset</label>
+            <select id="examPresetSelect">
+              <option value="quick">Quick Quiz</option>
+              <option value="school">School Test</option>
+              <option value="mock">Full Mock</option>
+            </select>
+            <label class="inline-check"><input type="checkbox" id="securityFullscreenToggle">Require fullscreen</label>
+            <label class="inline-check"><input type="checkbox" id="securityNavWarnToggle" checked>Warn on tab switch</label>
+            <label class="inline-check"><input type="checkbox" id="securityTokenToggle" checked>Use attempt token</label>
+          </div>
+          <button type="button" class="primary-btn" id="createExamBtn">Create Exam File</button>
+          <input type="file" id="importJsonInput" accept=".json,application/json" hidden>
+        </div>
+
+        <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+        <div class="status-log" id="statusLog" aria-live="polite"></div>
+      </aside>
+    </div>
+
+    <div class="panel-backdrop" id="panelBackdrop" aria-hidden="true"></div>
+
+    <section class="app-modal" id="importReportModal" hidden aria-modal="true" role="dialog" aria-labelledby="importReportTitle">
+      <article class="app-modal-card">
+        <div class="app-modal-head">
+          <h3 id="importReportTitle">Import Report</h3>
+          <button type="button" class="icon-btn" id="closeImportReportBtn" aria-label="Close import report">x</button>
+        </div>
+        <div class="app-modal-body" id="importReportContent"></div>
+      </article>
+    </section>
+
+    <section class="app-modal" id="preflightModal" hidden aria-modal="true" role="dialog" aria-labelledby="preflightTitle">
+      <article class="app-modal-card">
+        <div class="app-modal-head">
+          <h3 id="preflightTitle">Exam Preflight Validation</h3>
+          <button type="button" class="icon-btn" id="closePreflightBtn" aria-label="Close preflight panel">x</button>
+        </div>
+        <div class="app-modal-body" id="preflightContent"></div>
+        <div class="app-modal-actions">
+          <button type="button" class="secondary-btn" id="continuePreflightBtn">Continue Anyway</button>
+          <button type="button" class="ghost-btn" id="cancelPreflightBtn">Cancel</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="app-modal" id="shortcutsModal" hidden aria-modal="true" role="dialog" aria-labelledby="shortcutsTitle">
+      <article class="app-modal-card">
+        <div class="app-modal-head">
+          <h3 id="shortcutsTitle">Keyboard Shortcuts</h3>
+          <button type="button" class="icon-btn" id="closeShortcutsBtn" aria-label="Close shortcuts">x</button>
+        </div>
+        <div class="app-modal-body" id="shortcutsContent"></div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
