@@ -1,0 +1,110 @@
+﻿:root {
+  color-scheme: light;
+  --bg: #eef3fa;
+  --bg-grad-a: rgba(37, 99, 235, 0.18);
+  --bg-grad-b: rgba(13, 148, 136, 0.14);
+  --surface: #ffffff;
+  --surface-soft: #f4f8ff;
+  --surface-strong: #e9f0fb;
+  --header-bg: rgba(255, 255, 255, 0.84);
+  --text: #12203a;
+  --muted: #5c6f91;
+  --border: #d4dff0;
+  --border-strong: #b7c7e5;
+  --primary: #2563eb;
+  --primary-strong: #1e40af;
+  --primary-glow: rgba(37, 99, 235, 0.34);
+  --danger: #c02c1f;
+  --danger-strong: #991b1b;
+  --success: #0f766e;
+  --success-strong: #0f5f57;
+  --overlay-bg: rgba(12, 18, 34, 0.42);
+  --focus-ring: rgba(37, 99, 235, 0.28);
+  --shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.1);
+  --shadow-card: 0 14px 30px rgba(15, 23, 42, 0.14);
+  --button-shadow: 0 8px 16px rgba(15, 23, 42, 0.16);
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --transition: 300ms ease;
+  --action-footer-height: 88px;
+  --action-footer-offset: 18px;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1220;
+  --bg-grad-a: rgba(59, 130, 246, 0.2);
+  --bg-grad-b: rgba(20, 184, 166, 0.16);
+  --surface: #101a2d;
+  --surface-soft: #14213a;
+  --surface-strong: #1a2944;
+  --header-bg: rgba(12, 18, 32, 0.84);
+  --text: #e6eefc;
+  --muted: #98add2;
+  --border: #2a3b5a;
+  --border-strong: #3b5279;
+  --primary: #4f8cff;
+  --primary-strong: #2f6fe9;
+  --primary-glow: rgba(79, 140, 255, 0.36);
+  --danger: #d3453a;
+  --danger-strong: #b32f2f;
+  --success: #15a194;
+  --success-strong: #138176;
+  --overlay-bg: rgba(6, 10, 20, 0.58);
+  --focus-ring: rgba(79, 140, 255, 0.4);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.38);
+  --shadow-card: 0 18px 38px rgba(0, 0, 0, 0.42);
+  --button-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-contrast="high"] {
+  --bg: #ffffff;
+  --bg-grad-a: rgba(0, 0, 0, 0);
+  --bg-grad-b: rgba(0, 0, 0, 0);
+  --surface: #ffffff;
+  --surface-soft: #ffffff;
+  --surface-strong: #f3f3f3;
+  --header-bg: #ffffff;
+  --text: #000000;
+  --muted: #1f1f1f;
+  --border: #000000;
+  --border-strong: #000000;
+  --primary: #0037ff;
+  --primary-strong: #0020aa;
+  --success: #0b6f00;
+  --success-strong: #084f00;
+  --danger: #a80000;
+  --danger-strong: #7b0000;
+  --overlay-bg: rgba(0, 0, 0, 0.62);
+  --focus-ring: rgba(0, 55, 255, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 8%, var(--bg-grad-a), transparent 36%),
+    radial-gradient(circle at 86% 92%, var(--bg-grad-b), transparent 40%),
+    var(--bg);
+  background-attachment: fixed, fixed, fixed;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: 100vw 100vh, 100vw 100vh, auto;
+  font-family: "Segoe UI", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+

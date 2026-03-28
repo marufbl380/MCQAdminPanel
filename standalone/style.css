@@ -1,0 +1,29 @@
+@import url("../css/main.css");
+
+/* Standalone branding overrides: keep main layout, but replace image-based logo. */
+.app-brand {
+  line-height: 1;
+}
+
+.app-header h1 span.brand-mark {
+  color: var(--primary);
+  font-weight: 900;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+  margin-right: 8px;
+}
+
+.app-header h1 span.brand-name {
+  color: var(--text);
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+
+.mobile-controls-fab .controls-fab-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: var(--primary);
+}
+
