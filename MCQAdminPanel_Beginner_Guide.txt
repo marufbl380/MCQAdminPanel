@@ -1,269 +1,190 @@
-MCQAdminPanel v2.0 - Beginner Guide
-===================================
+MCQAdminPanel Beginner Guide
+============================
 
 Audience
 --------
-This guide is for someone who has never used this project before.
-You do NOT need backend knowledge. You only need a browser.
 
+This guide is for someone using MCQAdminPanel for the first time.
+
+You do not need backend knowledge. You only need the app and your question data.
 
 1) What This Project Does
 -------------------------
+
 MCQAdminPanel lets you:
-1. Create multiple-choice questions (MCQ) in an admin panel.
-2. Organize and edit questions.
-3. Import/export questions as JSON files.
-4. Generate a standalone exam file (`exam.html`) that students can open directly.
 
-Everything runs client-side (in the browser). No server is required.
+1. Create multiple-choice questions in an admin workspace.
+2. Edit, organize, reorder, and tag those questions.
+3. Import and export question banks as JSON.
+4. Export answer keys.
+5. Build a standalone `exam.html` file.
 
+The app you see in this repository is the shared web app layer of the project.
 
-2) Project Files (Important)
-----------------------------
-Main development files:
+2) What Is In This Repository
+-----------------------------
+
+This repository contains the shared browser app files directly at the root:
+
 1. `index.html`
-2. `style.css`
-3. `script.js`
+2. `css/`
+3. `js/`
+4. `icons/`
+5. `vendor/`
+6. `standalone/`
 
-Single-file build:
-1. `MCQAdminPanel.base64.html`
+In the full local project, this shared app is also packaged into:
 
-Use the 3-file version for normal development and changes.
-Use the single-file version when you need one portable file.
+1. A Windows Electron app
+2. An Android Capacitor app
 
+3) How To Start
+---------------
 
-3) How To Start (No Setup Needed)
----------------------------------
-Option A (Recommended):
-1. Open `index.html` in Chrome/Edge.
-2. The admin panel will load.
+Browser version:
 
-Option B:
-1. Open `MCQAdminPanel.base64.html`.
-2. Same UI in one file.
+1. Open the repo with a local static server such as Live Server.
+2. Open `index.html`.
+3. Start working with questions.
 
-
-4) Understand The Layout
+4) Main Parts Of The App
 ------------------------
-The UI has 3 areas:
 
-1. Main Container (Center)
-- Shows question cards only.
-- Each card has:
-  - question preview
-  - option count
-  - selection checkbox
-  - Edit button
+1. Workspace Tools
+   - Add Question
+   - Undo / Redo
+   - Delete actions
+   - Bulk tools
+   - Snapshots
 
-2. Left Panel (Question Editor)
-- Opens when you add/edit a question.
-- This is where all option editing happens.
-- Includes math structures/symbols section.
+2. Question Cards
+   - Shows saved questions
+   - Supports selection
+   - Supports reorder
+   - Lets you open the editor
 
-3. Right Panel (System Controls)
-- Add, delete, import/export, create exam, etc.
-- On mobile, open with the Controls button.
+3. Question Editor
+   - Edit question text
+   - Edit options
+   - Mark the correct answer
+   - Set topic, difficulty, marks, tags, and explanation
 
+4. JSON Tools
+   - Import JSON
+   - Export selected JSON
+   - Export full JSON
+   - Export answer key
 
-5) First-Time Workflow (Step-by-Step)
--------------------------------------
+5. Exam Settings
+   - Configure and build `exam.html`
+
+6. Utility Tools
+   - Print Questions
+   - Print Answer Key
+   - Snapshot Library
+   - Test Harness
+
+5) First-Time Workflow
+----------------------
+
 Step 1: Add your first question
+
 1. Click `Add Question`.
-2. Left editor opens.
-3. Type question text in the Question field.
-4. Fill all option fields.
-5. Select the correct option using the radio button.
-6. Click `Save Question`.
+2. Type the question text.
+3. Add at least 2 options.
+4. Select the correct option.
+5. Click `Save Question`.
 
 Step 2: Add more questions
+
 1. Repeat the same process.
-2. Questions appear as cards in center.
+2. Questions appear as cards in the main area.
 
-Step 3: Reorder questions
-1. Drag a card.
-2. Drop it above/below another card.
-3. Order updates automatically.
+Step 3: Organize your questions
 
-Step 4: Generate exam file
-1. Click `Create Exam File`.
-2. Downloaded file name is typically `exam.html`.
-3. Open `exam.html` in browser.
+1. Search, filter, or reorder cards.
+2. Select multiple cards if you want bulk actions.
 
+Step 4: Back up your data
 
-6) Question Rules (Validation)
-------------------------------
-A question is valid only when:
-1. Question text is not empty.
-2. Minimum 2 options exist.
-3. Maximum 6 options.
-4. Exactly one correct answer is selected.
-5. No empty option value.
+1. Open `JSON`.
+2. Export the full question bank as JSON.
 
-If any rule fails, save/generate is blocked with a message.
+Step 5: Build the exam file
 
+1. Open `Exam`.
+2. Adjust settings.
+3. Build `exam.html`.
 
-7) Option Editing (Beginner Tips)
----------------------------------
-In left editor:
-1. `Add Option` adds one option (up to max 6).
-2. `Move Up` and `Move Down` move the currently focused option.
-3. `Delete` removes an option (but min 2 must remain).
-4. `Save Question` commits changes.
-5. `Cancel` discards unsaved changes.
+6) Question Rules
+-----------------
 
-Tip:
-Click inside an option textarea first, then use Move Up/Move Down.
+A normal question needs:
 
+1. Non-empty question text
+2. Between 2 and 6 options
+3. One valid correct answer
 
-8) Bulk Actions Using Card Checkboxes
--------------------------------------
-In main card list:
-1. Tick one or more card checkboxes.
-2. Use right panel actions:
-  - `Delete Selected Questions`
-  - `Export Selected To JSON`
-  - `Clone Selected`
-  - `Shuffle Selected`
+For JSON import, the app is flexible:
 
+1. Question text is required
+2. Option values are required
+3. Missing metadata can be generated automatically
 
-9) JSON Import/Export (Very Important)
---------------------------------------
-Import behavior:
-1. Import is APPEND-ONLY.
-2. Existing questions are never wiped.
-3. Imported items are normalized and get fresh IDs.
+7) JSON Import / Export
+-----------------------
 
-Export behavior:
-1. `Export JSON File` exports all questions.
-2. `Export Selected To JSON` exports only selected cards.
-3. Order is preserved based on current card order.
+Import JSON:
 
-Accepted JSON format examples:
+- Accepts an array of questions or `{ "questions": [...] }`
+- Appends into the current workspace
+- Generates missing metadata when possible
+- Rejects invalid rows and reports them
 
-Example A (array):
-[
-  {
-    "question": "2 + 2 = ?",
-    "options": ["3", "4", "5", "6"],
-    "correctIndex": 1
-  }
-]
+Export JSON:
 
-Example B (object wrapper):
-{
-  "questions": [
-    {
-      "question": "Capital of France?",
-      "options": ["Berlin", "Madrid", "Paris", "Rome"],
-      "correctIndex": 2
-    }
-  ]
-}
+- Full export keeps current question order
+- Selected export keeps selected question order
+- Answer key export is also available
 
-
-10) Math Input Support (Question + Options)
--------------------------------------------
-Math is supported with MathJax-compatible LaTeX input.
-Use the math section in the left editor:
-1. Structures tab
-2. Symbols tab
-
-How to use:
-1. Click inside Question textarea or an Option textarea.
-2. Click a math structure/symbol button.
-3. Template is inserted at cursor position.
-4. Edit inserted text as needed.
-5. Save question.
-
-Inline math example:
-\( \frac{a}{b} = 2 \)
-
-Block math example:
-\[ \int_0^1 x^2\,dx \]
-
-Class 10 / Higher math examples:
-1. Mean:
-\bar{x} = \frac{1}{n}\sum\limits_{i=1}^{k} f_i x_i
-
-2. Assumed mean:
-\bar{x} = a + \frac{\sum f_i u_i}{n}\times h
-
-3. Quadratic formula:
-x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-
-
-11) Keyboard Shortcuts
-----------------------
-Default shortcuts:
-1. `Ctrl + N` -> Add Question
-2. `Ctrl + S` -> Save Question (editor open)
-3. `Ctrl + Z` -> Undo
-4. `Ctrl + Y` -> Redo
-5. `Ctrl + .` -> Toggle controls panel (mobile/tablet context)
-6. `Shift + ?` -> Open shortcuts modal
-7. `Ctrl + K` -> Focus math search (when editor is open)
-
-Editor navigation behavior:
-1. Up/Down arrows support moving between option textareas when cursor reaches boundaries.
-
-
-12) Theme and Accessibility
----------------------------
-Available controls:
-1. Theme toggle (Light/Dark)
-2. High Contrast mode
-
-Use these from the top header.
-
-
-13) Exam File (`exam.html`) - Student Side
-------------------------------------------
-Generated exam file has 3 screens:
-
-Screen 1: Setup
-1. Exam title
-2. Total available questions
-3. Input: how many questions to attempt
-4. Shuffle questions checkbox
-5. Shuffle options checkbox
-6. Time limit (minutes)
-7. Start Exam button
-
-Screen 2: Exam
-1. Timer visible at top
-2. Questions with radio options
-3. One answer per question
-4. Submit button
-5. Auto-submit when timer reaches zero
-
-Screen 3: Result
-1. Score (example: 8/10)
-2. Percentage
-3. Time taken
-4. Correct/incorrect highlighting
-5. Review toggle to show correct answers
-
-
-14) Example: Build A 5-Question Quiz
-------------------------------------
-1. Open `index.html`.
-2. Add 5 questions.
-3. For each question:
-  - Fill 4 options.
-  - Mark one correct.
-  - Save.
-4. Click `Create Exam File`.
-5. Open generated `exam.html`.
-6. In setup:
-  - question count: 5
-  - shuffle questions: checked
-  - shuffle options: checked
-  - time: 10 minutes
-7. Click Start and test flow.
-
-
-End of Guide
+8) Snapshots
 ------------
-If you want, create a second file for your team called:
-`MCQAdminPanel_Admin_Checklist.txt`
-with daily QA checks before publishing exams.
+
+Snapshots are local restore points inside the app.
+
+Use them when:
+
+- you are about to make a big change
+- you want a quick rollback point
+
+Use JSON export when:
+
+- you want a real backup file
+- you want to move the data elsewhere
+
+9) Helpful Features
+-------------------
+
+MCQAdminPanel also includes:
+
+- dark theme
+- high contrast mode
+- keyboard shortcuts
+- command palette
+- undo / redo
+- duplicate detection
+- math rendering with MathJax
+
+10) Best Habits
+---------------
+
+1. Export JSON regularly.
+2. Save a snapshot before bulk edits.
+3. Keep topic and tag naming consistent.
+4. Review the answer key before publishing.
+5. Run the test harness before final delivery.
+
+11) Related File
+----------------
+
+- `README.md`

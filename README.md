@@ -1,251 +1,103 @@
-# MCQAdminPanel v2.1
+# MCQAdminPanel
 
-Professional client-side MCQ authoring and exam delivery system built with:
+MCQAdminPanel is an offline-friendly MCQ authoring and exam delivery app. It lets you build a question bank, import and export JSON, print question papers and answer keys, and generate a standalone `exam.html` file for student use.
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- JSON-based data portability
-- No backend, no framework, no jQuery
+## What this repo contains
 
----
+This GitHub repository currently contains the shared web app layer of the project.
 
-## Overview
-
-MCQAdminPanel v2.1 is a complete CBT-style workflow in two parts:
-
-1. **Admin Panel** (`index.html`)
-2. **Generated Standalone Exam File** (`exam.html`, created from admin)
-
-The admin panel is used to create, edit, organize, validate, and export questions.  
-The generated exam file runs independently with setup, timed attempt, and result review.
-
----
-
-## Canonical Project Files
-
-Primary source files:
+Root files and folders:
 
 - `index.html`
-- `style.css`
-- `script.js`
+- `css/`
+- `js/`
+- `icons/`
+- `vendor/`
+- `standalone/`
 
-Portable single-file artifact:
+## Current project architecture
 
-- `MCQAdminPanel.base64.html`
+The full project now uses a shared-source architecture with platform wrappers:
 
-For development and maintenance, use the 3-file source set as canonical.
+1. Shared web app source
+2. Windows Electron wrapper
+3. Android Capacitor wrapper
 
----
+In the full local workspace, that architecture looks like:
 
-## Admin Panel (index.html)
+- `Main/` - shared source-of-truth web app
+- `Windows App/` - builds the Windows `.exe`
+- `APK/` - builds the Android `.apk`
 
-### 3-Container Architecture
+This repository represents the shared web app layer that those wrappers are built from.
 
-1. **Main Container (Question Cards)**
-2. **Left Sliding Panel (Question Editor)**
-3. **Right Control Panel (System Controls)**
+## Main features
 
-### Main Container
+- Create, edit, reorder, clone, tag, and delete MCQ questions
+- Preview math with MathJax while editing
+- Import JSON question banks and export full JSON, selected JSON, and answer keys
+- Build a standalone `exam.html` file for student delivery
+- Print question papers and answer keys
+- Save and restore local workspace snapshots
+- Use shortcuts, command palette actions, dark theme, and high-contrast mode
 
-- Displays question cards only
-- Card content includes:
-  - Question preview
-  - Option count
-  - Selection checkbox
-  - Edit action
-- Supports:
-  - Multi-select
-  - Drag-and-drop reorder
-  - Visual selected/duplicate states
+## How the app is organized
 
-### Left Panel: Question Editor
+### Shared web app files in this repo
 
-- Opens for create/edit operations
-- Contains:
-  - Question field
-  - Option list (min 2, max 6)
-  - Correct answer selector (exactly 1)
-  - Sticky option toolbar (`Add Option`, `Move Up`, `Move Down`)
-  - Save / Cancel actions
-- Includes unsaved-change protection
-- Supports multiline option editing
-- Supports keyboard navigation and editing shortcuts
+- `index.html` - main entry point
+- `css/` - stylesheets
+- `js/` - application logic
+- `icons/` - branding and UI assets
+- `vendor/` - third-party browser assets
+- `standalone/` - exam runtime assets used when building `exam.html`
 
-### Math Authoring System
+## Running this repo locally
 
-- Structures + Symbols navigation inside editor
-- Math search input
-- Insert templates/snippets into question or option cursor position
-- Math preview with MathJax rendering
-- Works in generated exam file as well
+This repo is a static web app. Use a local static server instead of opening files directly.
 
-### Right Panel: System Controls
+Example workflow:
 
-Core actions:
+1. Open the repo in Live Server, or serve it with any static file server.
+2. Open `index.html`.
+3. Use the app in the browser.
 
-- Add Question
-- Delete Question
-- Delete Selected Questions
-- Import JSON File (append-only)
-- Export Selected to JSON
-- Export JSON File
-- Create Exam File
+## Main user workflows
 
-Extended utilities:
+### Question authoring
 
-- Clone Selected
-- Shuffle Selected
-- Assign Tag to Selected
-- Export Answer Key JSON
-- Print Questions
-- Print Answer Key
-- Open Test Harness
+- Add questions
+- Edit options
+- mark correct answers
+- set topic, difficulty, marks, tags, and explanation
 
-### Additional Admin Features
+### Data management
 
-- Theme toggle (Light/Dark)
-- High-contrast mode
-- Keyboard shortcuts modal
-- Status log panel
-- Question search and filtering:
-  - Text query
-  - Topic
-  - Difficulty
-  - Duplicates only
-- Stats cards
-- Undo/Redo history
-- Auto-persisted local state
+- Import JSON
+- Export full JSON
+- Export selected JSON
+- Export answer key
 
----
+### Exam delivery
 
-## Data Model
+- Open exam settings
+- Validate readiness
+- Build `exam.html`
 
-Question object:
+### Utilities
 
-```json
-{
-  "id": "unique-id",
-  "question": "Question text",
-  "options": ["Option A", "Option B", "Option C", "Option D"],
-  "correctIndex": 0,
-  "topic": "Algebra",
-  "difficulty": "medium",
-  "marks": 1,
-  "tags": ["chapter-1", "mcq"],
-  "explanation": "Optional explanation"
-}
-```
+- Print questions
+- Print answer key
+- Open snapshot library
+- Use the test harness
 
----
+## Notes
 
-## Import / Export Rules
+- The app is client-side and offline-friendly
+- JSON is the main portability format
+- The standalone `exam.html` is generated from the admin workspace
+- In the full project, Windows and Android wrappers package this shared app with native file-saving behavior
 
-### Import JSON
+## Documentation
 
-- Accepts:
-  - Array format
-  - `{ "questions": [...] }` format
-- **Append-only behavior** (never wipes existing data)
-- Imported records are normalized
-- New unique IDs are generated for imported entries
-- Invalid rows are rejected and reported
-
-### Export JSON
-
-- Full export: current question order preserved
-- Selected export: only selected question cards, order preserved
-- Answer-key export also available
-
----
-
-## Exam Generation and Runtime
-
-Click `Create Exam File` in admin to generate a standalone `exam.html`.
-
-Generated exam includes embedded question payload:
-
-- No dependency on admin page
-- No dependency on localStorage from admin
-
-### Exam Screen Flow
-
-1. **Setup Screen**
-   - Exam title
-   - Total available questions
-   - Requested question count
-   - Shuffle questions toggle
-   - Shuffle options toggle
-   - Time limit (minutes)
-   - Validation before start
-
-2. **Exam Screen**
-   - Selected questions rendered responsively
-   - Visible timer
-   - One-answer-per-question radio selection
-   - Manual submit confirmation
-   - Auto-submit when timer reaches zero
-
-3. **Result Screen**
-   - Score
-   - Percentage
-   - Time taken
-   - Correct/incorrect highlighting
-   - Toggleable answer review
-
-### Exam Config / Security Options
-
-From admin controls:
-
-- Presets (`quick`, `school`, `mock`)
-- Fullscreen on start (optional)
-- Navigation warning tracking (optional)
-- Attempt token generation (optional)
-- Preflight validation before file generation
-
----
-
-## Responsive Behavior
-
-- **Desktop**: full 3-section workflow, sliding editor, persistent controls panel
-- **Tablet**: panel overlay behavior
-- **Mobile**:
-  - Full-screen left editor
-  - Controls panel opened via controls button
-  - Controls panel fixed near bottom-right flow
-
----
-
-## Keyboard Shortcuts (Default)
-
-- `Ctrl + N` -> Add Question
-- `Ctrl + S` -> Save Question
-- `Ctrl + Z` -> Undo
-- `Ctrl + Y` -> Redo
-- `Ctrl + .` -> Toggle controls panel (compact layouts)
-- `Shift + ?` -> Open shortcuts modal
-- `Ctrl + K` -> Focus math search (editor open)
-
----
-
-## Run Locally
-
-No installation is required.
-
-1. Open `index.html` in a browser.
-2. Build/import question bank.
-3. Click `Create Exam File`.
-4. Open downloaded `exam.html` and run the test flow.
-
----
-
-## Recommended QA Checklist
-
-Before release/distribution:
-
-1. Validate question save rules (2-6 options, one correct answer).
-2. Validate import is append-only.
-3. Validate drag reorder updates actual exported order.
-4. Validate math renders in admin preview and generated exam.
-5. Validate exam setup, timer, submit, and results flow.
-6. Validate mobile controls and panel behavior.
+- Beginner guide: [MCQAdminPanel_Beginner_Guide.txt](C:/Users/MSM/Documents/Projects/MCQAdminPanel_repo/MCQAdminPanel_Beginner_Guide.txt)
